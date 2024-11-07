@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Young Alumni Award Nomination Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            text-align: center;
+            padding: 20px 0;
+            background-color: rgba(34, 179, 193,255);
+            color: white;
+            margin: 0;
+        }
+
+        form {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            /* text-align: center; */
+        }
+
+        h3 {
+            color: rgba(34, 179, 193,255);;
+            border-bottom: 2px solid rgba(34, 179, 193,255);
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+        }
+        .centered-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        label,select {
+            display: block;
+            font-weight: bold;
+            margin: 10px 0 5px;
+        }
+
+        input[type="text"], input[type="email"], input[type="url"], input[type="tel"], select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        textarea {
+            height: 100px;
+        }
+
+        input[type="submit"] {
+            background-color: rgba(34, 179, 193,255);;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #005fa3;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .section {
+            padding: 20px 0;
+        }
+
+        .section:not(.hidden) {
+            margin-top: 30px;
+        }
+
+        .file-input {
+            padding: 5px 0;
+        }
+
+        .file-input input[type="file"] {
+            padding: 0;
+            border: none;
+        }
+    </style>
+    <script>
+        function toggleNominationFields() {
+            var nomination = document.getElementById("nomination").value;
+            var formContent = document.getElementById("form-content");
+            var nomineeFields = document.getElementById("nominee-fields");
+            var yourFields = document.getElementById("your-fields");
+            var sharedFields = document.getElementById("shared-fields");
+            var yourRole = document.getElementById("your_role");
+            var selfNominationQuestion = document.getElementById("self-nomination-question");
+            var criteriaSection = document.getElementById("criteria-section");
+
+            formContent.style.display = "block";
+
+            if (nomination === "yourself") {
+                nomineeFields.style.display = "none";
+                yourFields.style.display = "block";
+                sharedFields.style.display = "block";
+
+                yourRole.innerHTML = `
+                    <option value="" disabled selected>--Select--</option>
+                    <option value="fellow_alumni">Fellow Alumni</option>
+                    <option value="student">Student</option>
+                `;
+
+                selfNominationQuestion.classList.remove("hidden"); // Show additional question
+                criteriaSection.classList.add("hidden"); // Hide criteria section
+            } else {
+                nomineeFields.style.display = "block";
+                yourFields.style.display = "block";
+                sharedFields.style.display = "block";
+
+                yourRole.innerHTML = `
+                    <option value="" disabled selected>--Select--</option>
+                    <option value="faculty">Faculty</option>
+                    <option value="staff">Staff</option>
+                    <option value="fellow_alumni">Fellow Alumni</option>
+                    <option value="student">Student</option>
+                    <option value="other">Other</option>
+                `;
+
+                selfNominationQuestion.classList.add("hidden"); // Hide additional question
+                criteriaSection.classList.remove("hidden"); // Show criteria section
+            }
+        }
+
+        function toggleCriteriaFields() {
+            var criteria = document.querySelectorAll('input[name="criteria"]:checked');
+            var notableField = document.getElementById("notable-field");
+            var techField = document.getElementById("tech-field");
+            var societyField = document.getElementById("society-field");
+            var leadershipField = document.getElementById("leadership-field");
+            var testimonies = document.getElementById("testimonies-section");
+
+            notableField.classList.add('hidden');
+            techField.classList.add('hidden');
+            societyField.classList.add('hidden');
+            leadershipField.classList.add('hidden');
+            testimonies.classList.add('hidden');
+
+            criteria.forEach(function (item) {
+                if (item.value === "contribution_field") {
+                    notableField.classList.remove('hidden');
+                }
+                if (item.value === "contribution_technology") {
+                    techField.classList.remove('hidden');
+                }
+                if (item.value === "contribution_society") {
+                    societyField.classList.remove('hidden');
+                }
+                if (item.value === "contribution_leadership") {
+                    leadershipField.classList.remove('hidden');
+                }
+            });
+
+            if (criteria.length > 0) {
+                testimonies.classList.remove('hidden');
+            }
+        }
+    </script>
+</head>
+<body>
+
+<h2>Young Alumni Award Nomination Form</h2>
+
+<form action="/submit" method="post" enctype="multipart/form-data">
+    <label for="nomination">*Who are you nominating?</label>
+    <select id="nomination" name="nomination" onchange="toggleNominationFields()" required>
+        <option value="" disabled selected>--Select--</option>
+        <option value="yourself">Nominating Yourself</option>
+        <option value="someone_else">Nominating Someone Else</option>
+    </select>
+
+    <div id="form-content" style="display: none;">
+        <div id="your-fields" class="section">
+            <h3>Your Contact Information</h3>
+            <label for="your_title">*Title:</label>
+            <input type="text" id="your_title" name="your_title" placeholder="Eg: Mr, Mrs, Miss, Dr, Prof" required>
+
+            <label for="your_name">*Your Name:</label>
+            <input type="text" id="your_name" name="your_name" required>
+
+            <label for="your_email">*Email ID:</label>
+            <input type="email" id="your_email" name="your_email" required>
+
+            <label for="your_phone">*Your Phone Number:</label>
+            <input type="tel" id="your_phone" name="your_phone" required>
+
+            <label for="your_role">*Your Role in IIITD:</label>
+            <select id="your_role" name="your_role" required>
+                <!-- Options will be dynamically set based on selection -->
+            </select>
+        </div>
+
+        <div id="nominee-fields" class="section hidden">
+            <h3>Your Nominee’s Contact Information</h3>
+            <label for="nominee_title">*Nominee's Title:</label>
+            <input type="text" id="nominee_title" name="nominee_title" placeholder="Eg: Mr, Mrs, Miss, Dr, Prof">
+
+            <label for="nominee_name">*Nominee's Name:</label>
+            <input type="text" id="nominee_name" name="nominee_name">
+
+            <label for="nominee_email">*Nominee's Email ID:</label>
+            <input type="email" id="nominee_email" name="nominee_email">
+
+            <label for="nominee_phone">Nominee's Phone Number:</label>
+            <input type="tel" id="nominee_phone" name="nominee_phone">
+        </div>
+
+        <div id="shared-fields" class="section hidden">
+            <h3>Program Details</h3>
+            <label for="program">*Program:</label>
+            <select id="program" name="program" required>
+                <option value="" disabled selected>--Select--</option>
+                <option value="btech">B.Tech</option>
+                <option value="mtech">M.Tech</option>
+                <option value="dual_degree">Dual Degree</option>
+                <option value="phd">Ph.D.</option>
+                <option value="diploma">Diploma Program</option>
+            </select>
+
+            <label for="graduation_year">*Year of Graduation:</label>
+            <select id="nomineeYear" name="nomineeYear" required>
+                <option value="" disabled selected>--Select--</option>
+                <option value="2012">2012</option>
+                <option value="2013">2013</option>
+                <option value="2014">2014</option>
+                <option value="2015">2015</option>
+                <option value="2016">2016</option>
+                <option value="2017">2017</option>
+                <option value="2018">2018</option>
+                <option value="2019">2019</option>
+                <option value="2020">2020</option>
+                <option value="2021">2021</option>
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+            </select>
+
+            <label for="organisation">*Current Organisation:</label>
+            <input type="text" id="organisation" name="organisation" required>
+
+            <label for="designation">*Current Designation:</label>
+            <input type="text" id="designation" name="designation" required>
+
+            <label for="linkedin">*LinkedIn Profile Link:</label>
+            <input type="url" id="linkedin" name="linkedin" required>
+
+            <!-- Additional question for self-nomination -->
+            <div id="self-nomination-question" class="hidden">
+                <label for="self_reason">*Please briefly tell us why you should be considered for the "Young Alumni Award" (suggested: 100 - 200 words):</label>
+                <textarea id="self_reason" name="self_reason" rows="4"></textarea>
+            </div>
+
+            <!-- Criteria Section (only for nominating someone else) -->
+            <div id="criteria-section">
+                <h3>Which of the following criteria does the nominee meet? (You can select more than one)</h3>
+                <input type="checkbox" name="criteria" value="contribution_field" onclick="toggleCriteriaFields()"> Notable contribution to field of work or knowledge<br>
+                <input type="checkbox" name="criteria" value="contribution_technology" onclick="toggleCriteriaFields()"> Notable contribution to technological innovation/discipline<br>
+                <input type="checkbox" name="criteria" value="contribution_society" onclick="toggleCriteriaFields()"> Notable contribution to society/community/alma mater<br>
+                <input type="checkbox" name="criteria" value="contribution_leadership" onclick="toggleCriteriaFields()"> Notable contribution to leadership/entrepreneurship<br>
+            </div>
+        </div>
+
+        <!-- Criteria Sections (same as your previous code) -->
+        <!-- A) Notable contribution to field of work or knowledge -->
+        <div id="notable-field" class="section hidden">
+            <h3>A) Notable contribution to field of work or knowledge</h3>
+
+            <label for="accomplishments">Please share your notable accomplishments in the current role:</label>
+            <textarea id="accomplishments" name="accomplishments" rows="4"></textarea>
+
+            <label for="projects">1. In case there are any specific projects/collaborations with higher contributions from your end, please provide the details along with necessary proofs:</label>
+            <textarea id="projects" name="projects" rows="4"></textarea>
+
+            <label for="publications">2. Notable publications in journals/conferences, books/book chapters with contribution as first author (Please categorize the publications into Tier 1, Tier 2, A*, A, etc.):</label>
+            <textarea id="publications" name="publications" rows="4"></textarea>
+
+            <label for="talks">3. Have you given any invited talks related to your field of work? If yes, please share the list of these talks along with necessary proofs:</label>
+            <textarea id="talks" name="talks" rows="4"></textarea>
+
+            <label for="awards">4. Have you received any awards for your work? If yes, please share the details along with necessary proofs:</label>
+            <textarea id="awards" name="awards" rows="4"></textarea>
+
+            <label for="services">5. Have you made any contribution to professional services (eg: editor/reviewer in journals)? If yes, please share the details along with necessary proofs:</label>
+            <textarea id="services" name="services" rows="4"></textarea>
+        </div>
+
+        <!-- B) Notable contribution to technological innovation/discipline -->
+        <div id="tech-field" class="section hidden">
+            <h3>B) Notable contribution to technological innovation/discipline</h3>
+
+            <label for="patents">1. Do you have any patents? If yes, please provide the details along with necessary proofs:</label>
+            <textarea id="patents" name="patents" rows="4"></textarea>
+
+            <label for="research_projects">2. Do you have any research projects/innovations that have been deployed as technology transfer on ground? If yes, please provide the details along with necessary proofs, and mention the Technology Readiness Level (TRL) of each project:</label>
+            <textarea id="research_projects" name="research_projects" rows="4"></textarea>
+
+            <label for="innovation_awards">3. Have you received any awards for your innovation? If yes, please share the details along with necessary proofs:</label>
+            <textarea id="innovation_awards" name="innovation_awards" rows="4"></textarea>
+        </div>
+
+        <!-- C) Notable contribution to society/community -->
+        <div id="society-field" class="section hidden">
+            <h3>C) Notable contribution to society/community</h3>
+
+            <label for="impact_projects">1. Have you contributed to any projects that have made a significant impact on society? If yes, please provide the details along with necessary proofs:</label>
+            <textarea id="impact_projects" name="impact_projects" rows="4"></textarea>
+
+            <label for="community_work">2. Have you been involved in any community work that has had a major impact? Please provide the details along with necessary proofs:</label>
+            <textarea id="community_work" name="community_work" rows="4"></textarea>
+
+            <label for="alma_mater_contribution">3. Have you been involved in any service to your alma mater i.e. IIIT-Delhi? Please provide the details along with necessary proofs:</label>
+            <textarea id="alma_mater_contribution" name="alma_mater_contribution" rows="4"></textarea>
+
+            <label for="community_awards">4. Have you received any awards for your community work? If yes, please share the details along with necessary proofs:</label>
+            <textarea id="community_awards" name="community_awards" rows="4"></textarea>
+        </div>
+
+        <!-- D) Notable contribution to leadership/entrepreneurship -->
+        <div id="leadership-field" class="section hidden">
+            <h3>D) Notable contribution to leadership/entrepreneurship</h3>
+
+            <label for="leadership_initiatives">1. Please describe your significant accomplishments/initiatives in a leadership role:</label>
+            <textarea id="leadership_initiatives" name="leadership_initiatives" rows="4"></textarea>
+
+            <label for="ventures">2. Have you founded or co-founded any venture/company? If yes, please share information about your company along with the website link:</label>
+            <textarea id="ventures" name="ventures" rows="4"></textarea>
+
+            <label for="business_usp">3. What is the USP of your business, and how is it making a contribution in the upliftment of society or the nation?</label>
+            <textarea id="business_usp" name="business_usp" rows="4"></textarea>
+
+            <label for="startup_valuation">4. What is the current valuation of your startup? Please share necessary proofs:</label>
+            <textarea id="startup_valuation" name="startup_valuation" rows="4"></textarea>
+
+            <label for="startup_investments">5. Has your startup received any investments or funding? If yes, please share the details along with the necessary proofs:</label>
+            <textarea id="startup_investments" name="startup_investments" rows="4"></textarea>
+        </div>
+
+        <!-- E) Testimonies (Common for all criteria) -->
+        <div id="testimonies-section" class="section hidden">
+            <h3>E) Testimonies</h3>
+            <label for="testimonies">Please attach documents to support your or your nominee's candidature:</label>
+            <div class="file-input">
+                <input type="file" id="testimonies" name="testimonies" accept=".pdf">
+            </div>
+        </div>
+    </div>
+    <div>
+        <input type="submit" value="Submit Nomination">
+    </div>
+
+</form>
+
+</body>
+</html>
